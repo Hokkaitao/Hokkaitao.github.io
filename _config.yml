@@ -1,1 +1,24 @@
-theme: jekyll-theme-dinky
+# auto: true
+
+markdown: kramdown
+highlighter: rouge
+paginate: 8
+permalink: /:title
+encoding: UTF-8
+gems: [jekyll-paginate]
+
+title: Hokkaitao's Blogs
+url: Hokkaitao.github.io
+feed: /atom.xml
+author_info: <a href="http://litaotao.github.io/">Hokkaitao</a>
+
+myblog:
+  gavatar: images/navigation.bmp
+  gpname: Hokkaitao
+  linkedin: 
+  github: https://github.com/Hokkaitao
+  email: mailto:tsthght@yeah.net
+  coverimgs: []
+  postbgimg: []
+
+categories: [markdown, books]

@@ -1,37 +1,69 @@
 ## Welcome to GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/Hokkaitao/blogs/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+## Frame
+    ###404 页面，你可以自定义
+    ├── 404.html
+    ├── README.md
+    ### 博客配置文件，基本上是最重要的一个文件之一了
+    ├── _config.yml
+    ### 博客页面模版目录
+    ├── _layouts
+    │   ├── default.html
+    │   ├── home.html
+    │   ├── page.html
+    │   └── post.html
+    ### 博客文章目录，下面可以按文件夹进行博文分类
+    ### 注意，博文文件格式必须是：时间-博文标题.md，参考下面的格式
+    ├── _posts
+    │   ├── books
+    │   │   └── 2016-04-29-books-recommend-and-summarize-on-apr-2016.md
+    │   └── python
+    │       └── 2016-04-01-spark-in-finance-and-investing.md
+    ### 这个是你的站点地图了，用户可以访问这个文件夹下面的所有文件
+    ### 比如说，用户可以直接访问我的Hokkaitao.github.io/404.html; Hokkaitao.github.io/images/navigation.jpg
+    ### 比如说，当你访问 Hokkaitao.github.io/spark-in-finance-and-investing  
+    ###        实际上是访问了 Hokkaitao.github.io/spark-in-finance-and-investing.html
+    ### 你会发现这下面有很多在博客更目录下重复的文件夹，比如说 css，js，images等文件夹，不要纳闷，这是正常的
+    ### 因为你的博客更目录下的文件，是 jekyll 用来渲染一个 html 文件的，html 文件及其所需要的任何文件，都会放到 _site 这个
+    ### 专用的目录下面
+    ├── _site
+    │   ├── 404.html
+    │   ├── README.md
+    │   ├── atom.xml
+    │   ├── books-recommend-and-summarize-on-apr-2016.html
+    │   ├── css
+    │   │   ...
+    │   │   ...
+    │   │   ...
+    │   ├── images
+    │   │   ├── 2.jpg
+    │   │   ├── spark-in-finance-1.jpg
+    │   │   ├── spark-in-finance-2.jpg
+    │   │   └── spark-in-finance-3.jpg
+    │   ├── index.html
+    │   ├── js
+    │   │   ...
+    │   │   ...
+    │   │   ...
+    │   └── spark-in-finance-and-investing.html
+    ├── atom.xml
+    ├── css
+    │   │   ...
+    │   │   ...
+    │   │   ...
+    ├── images
+    │   │   ...
+    │   │   ...
+    │   │   ...
+    ├── index.html
+    └── js
+        │   │   ...
+        │   ...
+        │   ...
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Launch
+jekyll server --watch
+http://127.0.0.1:4000/
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Hokkaitao/blogs/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+## Reference
+https://github.com/litaotao/github-blog-template
