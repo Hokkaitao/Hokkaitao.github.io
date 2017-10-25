@@ -4,7 +4,7 @@ published: true
 title: "MaxScale的基本使用"
 description: maxscale
 ---
-## 1 MaxScale搭建
+## 1 MaxScale作为proxy
 - 机器规划
 <table>
 	<tr>
@@ -245,6 +245,74 @@ show master status;
 show slave status\G
 ```
 
+## 3 MaxScale作为proxy & Binlog Server
+
+- 机器规划
+
+<table>
+	<tr>
+		<td>node1</td>
+		<td>*.*.*.226</td>
+		<td>proxy & Binlog Server</td>
+		<td>MaxScale 2.1.9</td>
+	</tr>
+	<tr>
+		<td>node7</td>
+		<td>*.*.*.7</td>
+		<td>sub-slave</td>
+		<td>percona-5.7.19-17</td>
+	</tr>
+</table>
+
+- 部署图
+
+![MaxScale_BinlogServer_Master_Slave](../../images/maxscale_binlog_server_master_slave.jpg)
+
+- MaxScale配置
+
+```
+cat /etc/maxscale.cnf
+
+[Replication]
+type=service
+router=binlogrouter
+version_string=5.7.19-17
+
+router_options=server_id=1024, heartbeat=30, send_slave_heartbeat=1
+binlogdir=/data/binlog
+user=test
+passwd=pwd
+
+[ReplicationListener]
+type=listener
+service=Replication
+protocol=MySQLClient
+port=5308
+```
+
+```
+cat /data/binlog/master.ini
+[binlog_configuration]
+master_host=*.*.*.14
+master_port=3306
+master_user=repl
+master_password=pwd
+filestem=mysql-bin
+```
+
+- 启动
+
+```
+/usr/bin/maxscale -f /etc/maxscale.cnf
+```
+
+- BinlogServer
+
+```
+mysql -utest -p  -h*.*.*.226 -P5308
+show master status;
+show slave status\G
+```
 
 ## 参考
 - [MaxScale:A new tool to solve your MySQL scalability problems](https://www.percona.com/blog/2015/06/08/maxscale-a-new-tool-to-solve-your-mysql-scalability-problems/)

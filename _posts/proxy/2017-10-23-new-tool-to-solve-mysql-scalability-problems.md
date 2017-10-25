@@ -1,7 +1,7 @@
 ---
 layout: post
 published: true
-title: "MaxScale: 一个用于解决MySQL扩展性的新工具"
+title: "MaxScale: 一个用于解决MySQL扩展性的新工具（译）"
 description: replication, maxscale
 ---
 ## 正文
