@@ -4,7 +4,7 @@ published: true
 title: "OpenDDS 开发手册- 12章 Recorder and Replayer"
 description: opendds
 ---
-## 1 综述
+## 综述
 
 OpenDDS 的Recorder特性允许应用程序在不需要了解数据类型的前提下记录任意主题下样本的发布。类似的，Replayer特性允许这些记录的样本以相同或是不同的主题重新进行发布。和其他的Data Readers和Writers所不同的是其可以在任何类型下正常工作，甚至在编译阶段并不知道数据类型。样本的每一行包含不透明的字节序列。
 
@@ -37,9 +37,9 @@ class MessagerRecorderListener: public OpenDDS::DCPS::RecorderListener
 public:
 	MessagerRecorderListener();
 	virtual void on_sample_data_received(OpenDDS::DCPS::Recorder*, 
-									const OpenDDS::DCPS::RawDataSample &sample);
+						const OpenDDS::DCPS::RawDataSample &sample);
 	virtual void on_recorder_matched(OpenDDS::DCPS::Recorder*, 
-									const DDS::SubscriptionMatchedStatus &status);
+						const DDS::SubscriptionMatchedStatus &status);
 }
 ```
 
