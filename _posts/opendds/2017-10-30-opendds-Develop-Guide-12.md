@@ -1,7 +1,7 @@
 ---
 layout: post
 published: true
-title: "OpenDDS 开发手册- 12章"
+title: "OpenDDS 开发手册- 12章 Recorder and Replayer"
 description: opendds
 ---
 ## 1 综述
@@ -23,10 +23,10 @@ Recorder和Replayer使用OpenDDS底层的发现和传输库，就好像DataReade
 ```
 OpenDDS::DCPS::Recorder_var recorder = 
 	Service_participant->create_recorder(domain_participant, 
-										topic.in(), 
-										sub_qos, 
-										dr_qos, 
-										recorder_listener);
+						topic.in(), 
+						sub_qos, 
+						dr_qos, 
+						recorder_listener);
 ```
 
 通过RecorderListener使用“one callback per sample”模型来使得数据样本可用。样本作为OpenDDS::DCPS::RawDataSample对象。该对象包括数据样本的时间戳以及排序的样本值。下面是一个用户定义的RecorderListener类定义：
