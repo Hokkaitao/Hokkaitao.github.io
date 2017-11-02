@@ -25,3 +25,4 @@ GPL(General Public license)是公共许可证，遵循了GPL的软件是公共�
 ## 参考
 - [关于GPL协议的理解（开源与商用、免费与收费的理解）](http://blog.csdn.net/szwangdf/article/details/27191085/)
 - [MySQL中文参考手册](http://www.yesky.com/imagesnew/software/mysql/manual_Licensing_and_Support.html)
+- [为什么GPL是更好的开源许可证?](http://www.ruanyifeng.com/blog/2010/02/why_gpl_is_a_better_choice.html)
