@@ -1,7 +1,7 @@
 ---
 layout: post
 published: true
-title: "基于DDS的数据分发中间件设计与实现"
+title: "基于DDS的数据分发中间件设计与实现（论文阅读）"
 description: dds, avionics
 ---
 ## 研究目的意义
