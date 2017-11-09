@@ -213,3 +213,4 @@ pt-mysql-summary --user=root --password=123456
 
 ## 参考
 - [分析pt-query-digest输出结果](http://f.dataguru.cn/thread-338724-1-1.html)
+- [MySQL慢查询之pt-query-digest分析慢查询日志](http://www.jb51.net/article/107698.htm)
