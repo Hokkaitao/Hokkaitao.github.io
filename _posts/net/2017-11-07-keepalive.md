@@ -32,7 +32,7 @@ Keepalive可以用于在对端死掉并发送通知之前检测到对端的连�
 
 发送两个TCP keepalive探测包的时间间隔，默认75秒
 
-## 查看与配置
+## 查看
 
 ```
 cat /proc/sys/net/ipv4/tcp_keepalive_time
@@ -40,6 +40,41 @@ cat /proc/sys/net/ipv4/tcp_keepalive_probes
 cat /proc/sys/net/ipv4/tcp_keepalive_intvl
 ```
 
+## 修改
+
+全局设置可以修改/etc/sysctl.conf:
+
+```
+net.ipv4.tcp_keepalive_intvl = 20
+net.ipv4.tcp_keepalive_probes = 3
+net.ipv4.tcp_keepalive_time = 60
+```
+
+立即生效方式：
+
+```
+/sbin/sysctl -p
+/sbin/sysctl -w net.ipv4.tcp_keepalive_intvl=20
+/sbin/sysctl -w net.ipv4.tcp_keepalive_probes=3
+/sbin/sysctl -w net.ipv4.tcp_keepalive_time=60
+```
+
+## 编程
+
+```
+int keepAlive = 1;//开启keepalive属性
+int keepIdle= 60;//如果连接在60s内没有任何数据来往，则进行探测
+int keepInterval = 5;//探测时发包的时间间隔为5秒
+int keepCount=3;//探测尝试的次数。如果第一次探测包就收到响应，则后2次不再发
+
+setsockopt(rs, SOL_SOCKET, SO_KEEPALIVE, (void *)&keepAlive, sizeof(keepAlive));
+setsockopt(rs, SOL_TCP, TCP_KEEPIDLE, (void *)&keepIdle, sizeof(keepIdle));
+setsockopt(rs, SOL_TCP, TCP_KEEPCNT, (void *)&keepInterval, sizeof(keepInterval));
+setsockopt(rs, SOL_TCP, TCP_KEEPCNT, (void *)&keepCount, sizeof(keepCount));
+```
+在程序表现为，当tcp检测到对端socket不再可用时（不能发出探测包，或是没有收到ACK响应包），select会返回socket可读，并且在recv时返回-1，同时设置上errno为ETIMEDOUT。
+
 ## 参考
 - [Linux下TCP的Keepalive相关参数学习](http://www.linuxidc.com/Linux/2015-03/115321.htm)
 - [TCP Keepalive HOWTO](http://tldp.org/HOWTO/TCP-Keepalive-HOWTO/index.html)
+- [linux下TCP keepalive 属性设置](http://blog.csdn.net/sunxiaopengsun/article/details/56842748)
