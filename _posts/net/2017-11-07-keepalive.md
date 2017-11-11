@@ -20,7 +20,10 @@ Keepalive可以用于在对端死掉并发送通知之前检测到对端的连�
 - 网络断开的情况下组织对端的TCP连接断开
 
 ## 带来的问题
-存活（keepalive）并不是TCP规范的一部分，在HostRequirements RFC罗列有不适用它的三个理由：1. 在短暂的故障期间，它们可能引起一个良好连接被释放 2. 它们消费了不必要的宽带 3. 在以数据包击飞的互联网上它们耗费金钱。
+存活（keepalive）并不是TCP规范的一部分，在HostRequirements RFC罗列有不适用它的三个理由：
+- 在短暂的故障期间，它们可能引起一个良好连接被释放 
+- 它们消费了不必要的宽带 
+- 在以数据包击飞的互联网上它们耗费金钱。
 
 ## 参数含义
 - tcp_keepalive_time
@@ -76,6 +79,10 @@ setsockopt(rs, SOL_TCP, TCP_KEEPCNT, (void *)&keepInterval, sizeof(keepInterval)
 setsockopt(rs, SOL_TCP, TCP_KEEPCNT, (void *)&keepCount, sizeof(keepCount));
 ```
 在程序表现为，当tcp检测到对端socket不再可用时（不能发出探测包，或是没有收到ACK响应包），select会返回socket可读，并且在recv时返回-1，同时设置上errno为ETIMEDOUT。
+
+## 验证
+
+
 
 ## 参考
 - [Linux下TCP的Keepalive相关参数学习](http://www.linuxidc.com/Linux/2015-03/115321.htm)

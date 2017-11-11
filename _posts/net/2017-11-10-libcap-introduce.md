@@ -5,7 +5,7 @@ title: "libcap编程"
 description: libcap, tcp
 ---
 ## 介绍
-libcap是一个网络数据包捕获函数库，功能非常强大，Linux下著名的tcpdump就是以其为基础开发的。
+libcap是一个网络数据包捕获函数库，功能非常强大，是由劳伦斯伯克利实验室的网络研究小组开发者开发实现，其功能类似WinPcap，提供了应用层API给开发人员实现数据包的过滤和嗅探功能。Linux下著名的tcpdump就是以其为基础开发的。
 
 libcap主要作用：
 - 捕获各种数据包，例如：网络流量统计
@@ -258,3 +258,4 @@ int main()
 
 ## 参考
 - [Linux 网络编程—— libpcap 详解](http://blog.csdn.net/lianghe_work/article/details/45173295)
+- [Libpcap详解](http://www.cnblogs.com/coder2012/archive/2013/04/13/3012390.html)

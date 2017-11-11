@@ -194,7 +194,20 @@ gcc -o TCPClient TCPClient.c
 tcpdump 'port 1234' -i eth1 -S
 ```
 
+## 状态变迁：
+
+![tcp_state_change](../../images/tcp_state_changes.png)
+
+## 状态查看
+
+```
+netstat -n
+netstat -net |awk -v i=0,j=0 '{if($6 =="ESTABLISHED"){I++};if($6=="CLOSE_WAIT"){j++};print i,j,prit $6}'
+netstat -n|awk '/^tcp/ {++S[$NF]}END{for (a in S) print a, S[a]}'
+netstat -n|awk '/^tcp/ {++S[$NF]}END{for (a in S) print a, S[a]|"sort -r -n -k2"}'
+```
 
 ## 参考
 - [理解TCP三次握手/四次断开的必要性](http://www.cnblogs.com/qiaoconglovelife/p/5733056.html)
 - [【Linux/unix网络编程】之使用socket进行TCP编程](http://www.cnblogs.com/msxh/p/4900728.html)
+- [TCP状态](http://www.cnblogs.com/coder2012/p/5199333.html)
