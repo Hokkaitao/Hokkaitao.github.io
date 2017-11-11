@@ -196,7 +196,7 @@ tcpdump 'port 1234' -i eth1 -S
 
 ## 状态变迁：
 
-![tcp_state_change](../../images/tcp_state_changes.png)
+![tcp_state_change](../../images/tcp_state_change.png)
 
 ## 状态查看
 
