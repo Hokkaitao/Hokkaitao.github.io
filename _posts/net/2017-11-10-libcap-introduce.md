@@ -1,0 +1,260 @@
+---
+layout: post
+published: true
+title: "libcap编程"
+description: libcap, tcp
+---
+## 介绍
+libcap是一个网络数据包捕获函数库，功能非常强大，Linux下著名的tcpdump就是以其为基础开发的。
+
+libcap主要作用：
+- 捕获各种数据包，例如：网络流量统计
+- 过滤网络数据包，例如：过滤掉本地的一些数据，类似防火墙
+- 分析网络数据包，例如：分析网络协议，数据的采集
+- 存储网络数据包，例如：保存捕获的数据以为将来进行分析
+
+libcap的抓包框架：
+- pcap_lookupdev()
+函数用于查找网络设备，返回可被pcap_open_live()函数调用的网络设备名指针
+- pcap_lookupnet()
+函数获得指定网络设备的网络号和掩码
+- pcap_open_live()
+函数用于打开网络设备，并且返回用于捕获网络数据包的数据包捕获描述字。对与此网络设备的操作都要基于此网络设备描述字
+- pcap_compile()
+函数用于将用户指定的过滤策略编译到过滤程序中
+- pcap_setfilter()
+函数用于设置过滤器
+- pcap_loop()
+函数pcap_dispatch()函数用于捕获数据包，不火候还可以进行处理，此外pcap_next()和pcap_next_ex()两个函数也可用于捕获数据包
+- pcap_close()
+函数用于关闭网络设备，释放资源
+
+利用libcap函数库开发应用程序的步骤：
+- 打开网络设备
+- 设置过滤规则
+- 捕获数据
+
+## 编译
+```
+$GCC -o $PROG $OBJ -lpcap
+```
+
+## 接口介绍
+- char *pcap_lookdev(char *errbuf)
+功能：
+	 得到可用的网络设备名指针
+参数：
+	errbuf存放出错信息字符串，里面有个宏PCAP_ERRBUF_SIZE为错误缓冲区大小
+返回值：
+	成功返回设备名指针（第一个合适的网络接口的字符串指针）
+    失败返回NULL，errbuf存放错误信息字符串
+实例：
+
+```
+char error_content[PCAP_ERRBUF_SIZE] = {0}; /* 出错信息 */
+char *dev = pcap_lookupdev(error_content);
+if(NULL == dev)
+{
+	printf(error_content);
+	exit(-1);
+}
+```
+
+- int pcap_lookupnet(char *device, bpf_u_int32 *netp, bpf_u_int32 *maskp, char *errbuf);
+功能：
+	获取网络号（IP）和掩码
+参数：
+	device：网络设备名，为第一步获取的网络接口字符串（pcap_lookupdev()的返回值），也可认为指定，如“eth0”。
+	netp：存放ip地址的指针，bpf_u_int32为32位无符号整型
+	maskp：存放子网掩码的指针，bpf_u_int32为32位无符号整型
+	errbuf：存放出错信息
+返回值：
+	成功返回0，失败返回-1
+实例：
+
+```
+char error_content[PCAP_ERRBUF_SIZE] = {0}; /* 出错信息 */
+char *dev = pcap_lookupdev(error_content);
+if(NULL == dev)
+{
+	printf(error_content);
+	exit(-1);
+}
+
+bpf_u_int32 netp = 0, maskp = 0;
+pcap_t * pcap_handle = NULL;
+int ret = 0;
+
+/*获得网络号和掩码*/
+ret = pcap_lookupnet(dev, &netp, &maskp, error_content);
+if(ret == -1)
+{
+	printf(error_content);
+	exit(-1);
+}
+```
+
+- pcap_t *pcap_open_live(const char *device, int snaplen, int promisc, int to_ms, char *ebuf)
+功能：
+	打开一个用于捕获数据的网络接口
+参数：
+	device：网络接口的名字，第一步获取的网络接口字符串，也可认为指定
+	snaplen：捕获数据包的长度，长度不能大于65535个字节
+	promise：1代表混在模式，其他为非混杂模式
+	to_ms：指定需要等待的毫秒数，超过这个书之后，数据包的函数会立即返回。0代表一直等待知道有数据包到来
+	ebuf：存储错误信息
+返回：
+	pcap_t类型指针，后面的所有操作都是用这个指针	
+实例
+
+```
+char error_content[PCAP_ERRBUF_SIZE] = {0}; /* 出错信息*/
+char *dev = pcap_lookupdev(error_content); /* 获取网络接口 */
+if(NULL == dev)
+{
+ printf(error_content);
+ exit(-1);
+}
+
+/* 打开网络接口 */
+pcap_t * pcap_handle = pcap_open_live(dev, 1024, 1, 0, error_content);
+if(NULL == pcap_handle)
+{
+ printf(error_content);
+ exit(-1);
+}
+```
+
+- const u_char *pcap_next(pcap_t *p, struct pcap_pkthdr *h)
+功能：
+	捕获一个网络数据包，收到一个数据包立即返回
+参数：
+	p：pcap_open_live()返回的pcap_t类型的指针
+	h：数据包头
+pcap_pkthdr类型的定义如下：
+
+```
+struct pcap_pkthdr {
+	struct timeval ts;//抓到包的时间
+	bpf_u_int32 caplen;//抓到的数据的长度
+	bpf_u_int32 len;//表示数据包的实际长度
+}
+```
+返回值：
+	成功返回捕获数据的地址，失败返回NULL
+
+- int pcap_loop(pcap_t *p, int cnt, pcap_handler callback, u_char *user)
+功能：
+	循环捕获网络数据包，知道遇到错误或者满足退出条件。每次捕获一个数据包就会调用callback指定的回调函数，可以在回调函数中进行数据包的处理操作。
+参数：
+	p：pcap_open_live()返回的pcap_t类型指针
+	cnt：指定捕获数据包的个数，一旦抓到了cnt个数据包，pcap_loop立即返回。如果是-1则会无休止的捕获，直到错误出现
+	callback：回调函数，名字任意，根据需要自行取名
+	user：向回调函数中传递的参数
+callback回调函数的定义：
+
+```
+void callback(u__char *userarg, const struct pcap_pkthdr *pkthdr, const u_char *packet)
+```
+
+- void pcap_close(pcap_t *p);
+功能：
+	关闭pcap_open_live()打开的网络接口，并释放相关资源
+参数：
+	p：需要关闭的网络接口，pcap_open_live()的返回值
+返回值：
+	无
+
+- int pcap_compile(pcap_t *p, struct bpf_program *fp, char *buf, int optimize, bpf_u_int32 mask)
+功能：
+	编译BPF过滤规则
+参数：
+	p：pcap_open_live()返回的pcap_t类型指针
+	fp：存放编译后的bpf，应用过滤规则时需要用到这个指针
+	buf：过滤条件
+	optimize：是否需要优化过滤条件
+	mask：指定本地网络的网络掩码，不需要时需0
+返回值：
+	成功返回0，失败返回-1
+
+- int pcap_setfilter(pcap_t *p, struct bpf_program *fp)
+功能：
+	应用BPF规律规则，简单理解为让过滤生效
+参数：
+	p：pcap_open_live()返回的pcap_t类型指针
+	fp：pcap_compile()的第二个参数
+返回值：
+	成功返回0，失败返回-1
+
+## 示例
+```
+#include <pcap.h>
+#include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+void getPacket(u_char * arg, const struct pcap_pkthdr * pkthdr, const u_char * packet)
+{
+  int * id = (int *)arg;
+  
+  printf("id: %d\n", ++(*id));
+  printf("Packet length: %d\n", pkthdr->len);
+  printf("Number of bytes: %d\n", pkthdr->caplen);
+  printf("Recieved time: %s", ctime((const time_t *)&pkthdr->ts.tv_sec)); 
+  
+  int i;
+  for(i=0; i<pkthdr->len; ++i)
+  {
+    printf(" %02x", packet[i]);
+    if( (i + 1) % 16 == 0 )
+    {
+      printf("\n");
+    }
+  }
+  
+  printf("\n\n");
+}
+
+int main()
+{
+  char errBuf[PCAP_ERRBUF_SIZE], * devStr;
+  
+  /* get a device */
+  devStr = pcap_lookupdev(errBuf);
+  
+  if(devStr)
+  {
+    printf("success: device: %s\n", devStr);
+  }
+  else
+  {
+    printf("error: %s\n", errBuf);
+    exit(1);
+  }
+  
+  /* open a device, wait until a packet arrives */
+  pcap_t * device = pcap_open_live(devStr, 65535, 1, 0, errBuf);
+  
+  if(!device)
+  {
+    printf("error: pcap_open_live(): %s\n", errBuf);
+    exit(1);
+  }
+  
+  /* construct a filter */
+  struct bpf_program filter;
+  pcap_compile(device, &filter, "dst port 80", 1, 0);
+  pcap_setfilter(device, &filter);
+  
+  /* wait loop forever */
+  int id = 0;
+  pcap_loop(device, -1, getPacket, (u_char*)&id);
+  
+  pcap_close(device);
+
+  return 0;
+}
+```
+
+## 参考
+- [Linux 网络编程—— libpcap 详解](http://blog.csdn.net/lianghe_work/article/details/45173295)
