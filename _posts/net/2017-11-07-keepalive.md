@@ -91,9 +91,32 @@ setsockopt(rs, SOL_TCP, TCP_KEEPCNT, (void *)&keepCount, sizeof(keepCount));
 10:12:12.379134 IP 10.4.230.14.search-agent > 10.5.233.200.ethercat: Flags [.], ack 3318227116, win 114, options [nop,nop,TS val 710876690 ecr 3499532412], length 0
 ```
 
+## 场景
+通常keepalive根据需求配置到服务端。
+
+- 客户端主机依旧活跃（UP），且服务器可达
+
+服务器知道对方依然活跃，服务器的TCP为其复位存活定时器，如果在这两个小时到期之前，连接上发生应用程序的通信，则定时器重新复位存货定时器。
+
+- 客户端已经崩溃，货已经关闭（down），或者正在重启过程中
+
+在这两种情况下，其TCP都不会进行相应。服务器没有收到对其发出探测的响应，并在75秒后超时。服务器将总共发送10个这样的探测包，每个探测间隔75秒。如果没有收到一个响应，它就认为客户端主机已经关闭或是终止连接。
+
+- 客户端曾经崩溃，单已经重启
+
+该情况下，服务器将会收到对其存活探测的相应，但该相应是一个复位，从而引起服务器对连接的终止。
+
+- 客户端主机活跃运行，但从服务器不可到达
+
+该情况与2类似，因为TCP无法区别它们两个，其所表明的仅是未收到对其探测的回复。
+
+- 客户端正常关闭
+
+客户端TCP会在连接上发送一个FIN包，收到这个FIN后，服务器TCP向服务器进程报告一个文件结束，以允许服务器检测这种状态。
 
 
 ## 参考
 - [Linux下TCP的Keepalive相关参数学习](http://www.linuxidc.com/Linux/2015-03/115321.htm)
 - [TCP Keepalive HOWTO](http://tldp.org/HOWTO/TCP-Keepalive-HOWTO/index.html)
 - [linux下TCP keepalive 属性设置](http://blog.csdn.net/sunxiaopengsun/article/details/56842748)
+- [linux下使用TCP存活(keepalive)定时器](http://blog.csdn.net/guomsh/article/details/8484222)
