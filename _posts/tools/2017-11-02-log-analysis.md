@@ -2,7 +2,7 @@
 layout: post
 published: true
 title: "日志分析常见方法"
-description: awk
+description: awk, grep 
 ---
 ## 集合操作
 
