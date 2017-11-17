@@ -92,3 +92,4 @@ egrep -w -R 'word1|word2' ~/klbtmp
 
 ## 参考
 - [数据需求统计常用shell命令---AWK分组求和，分组统计次数](http://6226001001.blog.51cto.com/9243584/1659824)
+- [Linux如何搜索查找文件里面内容](https://www.cnblogs.com/kerrycode/p/5802420.html)
