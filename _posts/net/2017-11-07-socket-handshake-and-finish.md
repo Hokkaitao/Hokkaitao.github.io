@@ -12,9 +12,9 @@ description: handshake, tcp
 - 数据抓包
 
 ```
-13:52:53.305468 IP 10.5.233.200.45978 > 10.5.234.226.search-agent: Flags [S], seq 1301327529, win 14600, options [mss 1460,sackOK,TS val 3175272095 ecr 0,nop,wscale 7], length 0
-13:52:53.305512 IP 10.5.234.226.search-agent > 10.5.233.200.45978: Flags [S.], seq 4214121876, ack 1301327530, win 14480, options [mss 1460,sackOK,TS val 3379828262 ecr 3175272095,nop,wscale 7], length 0
-13:52:53.305933 IP 10.5.233.200.45978 > 10.5.234.226.search-agent: Flags [.], ack 4214121877, win 115, options [nop,nop,TS val 3175272095 ecr 3379828262], length 0
+13:52:53.305468 IP *.*.*.200.45978 > *.*.*.226.search-agent: Flags [S], seq 1301327529, win 14600, options [mss 1460,sackOK,TS val 3175272095 ecr 0,nop,wscale 7], length 0
+13:52:53.305512 IP *.*.*.226.search-agent > *.*.*.200.45978: Flags [S.], seq 4214121876, ack 1301327530, win 14480, options [mss 1460,sackOK,TS val 3379828262 ecr 3175272095,nop,wscale 7], length 0
+13:52:53.305933 IP *.*.*.200.45978 > *.*.*.226.search-agent: Flags [.], ack 4214121877, win 115, options [nop,nop,TS val 3175272095 ecr 3379828262], length 0
 ```
 
 ## TCP连接断开
@@ -25,9 +25,9 @@ description: handshake, tcp
 - 数据抓包
 
 ```
-14:05:07.825766 IP 10.5.233.200.46341 > 10.5.234.226.search-agent: Flags [F.], seq 906838083, ack 813820492, win 115, options [nop,nop,TS val 3176006615 ecr 3380557982], length 0
-14:05:07.825896 IP 10.5.234.226.search-agent > 10.5.233.200.46341: Flags [F.], seq 813820492, ack 906838084, win 114, options [nop,nop,TS val 3380562782 ecr 3176006615], length 0
-14:05:07.826121 IP 10.5.233.200.46341 > 10.5.234.226.search-agent: Flags [.], ack 813820493, win 115, options [nop,nop,TS val 3176006615 ecr 3380562782], length 0
+14:05:07.825766 IP *.*.*.200.46341 > *.*.*.226.search-agent: Flags [F.], seq 906838083, ack 813820492, win 115, options [nop,nop,TS val 3176006615 ecr 3380557982], length 0
+14:05:07.825896 IP *.*.*.226.search-agent > *.*.*.200.46341: Flags [F.], seq 813820492, ack 906838084, win 114, options [nop,nop,TS val 3380562782 ecr 3176006615], length 0
+14:05:07.826121 IP *.*.*.200.46341 > *.*.*.226.search-agent: Flags [.], ack 813820493, win 115, options [nop,nop,TS val 3176006615 ecr 3380562782], length 0
 ```
 
 ## 测试程序
