@@ -82,7 +82,15 @@ Unicode符号范围（十六进制） | UTF-8编码方式（二进制）
 
 Unicode规范定义，每个文件的最前面分别加入一个表示编码顺序的字符，这个字符名字叫做“零宽度非换行空格”，用FEFF表示。这正好是两个字节，而且FF比FE大1。如果一个文件的头两个字节是FEFF，就表示该文件采用大头方式；如果头两个字节是FFFE，就表示该文件采用小头方式。
 
+## UTF8MB4
+
+MySQL在5.5.3之后增加了这个utf8mb4的编码，mb4就是most types 4的意思，专门用来兼容自个字节的unicode。好在utf8mb4是utf8的超集，除了将编码改为utf8mb4外不需要做其他的转换。
+
+utf8既然能够存储下大部分中文汉字，那为什么还有有utf8mb4呢？原来MySQL支持的utf8编码最大字符长度为3个字节，如果需要4额字节的款字符就会插入异常了。三个字节的utf8最大能编码的Unicode的字符是0xffff，也就是Unicode中的基本多文种平面（BMP）。也就是说，任何不再基本多文本平面的Unicode字符，都无法使用MySQL的utf8字符集存储。包括Emoji表情（Emoji是一种特殊的Unicode编码，常见于ios和android手机上），和很多不常用的汉字以及任何新增的Unicode字符等等。
+
+utf8是MySQL中的一种字符集，只支持最长三个字节的utf8字符，也就是Unicode中的基本多文本面。要在MySQL中保存4字节长度的utf8字符，就需要使用utf8mb4字符集，但只有5.5.3版本以后的才支持。
 
 ## 参考
 - [字符编码笔记：ASCII Unicode UTF-8](http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html)
 - [utf8编码原理详解](http://blog.csdn.net/baixiaoshi/article/details/40786503)
+- [清官谈mysql中utf8和utf8mb4区别](http://ourmysql.com/archives/1402)
